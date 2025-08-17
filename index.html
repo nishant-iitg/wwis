@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Foundation Day Invitation – True Card</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --card-w: 360px;              /* tweak width for mobile */
+      --card-h: 560px;              /* tweak height for mobile */
+      --radius: 18px;
+      --shadow: 0 12px 30px rgba(0,0,0,.18);
+      --bg: #f7f5ef;               /* page background */
+      --paper: #fffdfa;             /* paper color */
+      --ink: #1f2937;               /* text color */
+      --primary: #7c3aed;           /* accent */
+      --gold: #cfa54b;              /* ornament */
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%;}
+    body{
+      margin:0;display:grid;place-items:center;background:
+        radial-gradient(1200px 600px at 50% -20%, #ffffff 0, transparent 60%),
+        linear-gradient(180deg,#f7f7fb 0,#eef1f7 60%,#e6edf6 100%);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      color:var(--ink);
+    }
+
+    .wrap{width:100%;max-width:430px;padding:16px}
+
+    /* Scene creates perspective */
+    .scene{perspective:1400px; position:relative;}
+
+    /* Book container */
+    .book{position:relative;width:var(--card-w);height:var(--card-h);margin:0 auto;}
+
+    /* The left page is static (inside-left) */
+    .left-page{
+      position:absolute;inset:0;right:50%;width:50%;
+      background:var(--paper);
+      border-radius:var(--radius) 0 0 var(--radius);
+      box-shadow:var(--shadow);
+      padding:20px 18px;
+      transform:translateZ(1px); /* keep above background */
+      overflow:auto;
+    }
+
+    /* The right leaf flips like a real cover */
+    .right-leaf{position:absolute;inset:0;left:50%;width:50%;height:100%;
+      transform-style:preserve-3d;transform-origin:left center;transition:transform 1s ease;
+    }
+
+    .leaf-face{position:absolute;inset:0;width:100%;height:100%;
+      backface-visibility:hidden; border-radius:0 var(--radius) var(--radius) 0; overflow:auto;
+    }
+
+    /* Front cover */
+    .front{
+      background:
+        radial-gradient(600px 300px at 0% 0%, rgba(255,255,255,.22), transparent 60%),
+        linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #d946ef 100%);
+      color:white; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;
+      text-align:center; padding:28px;
+    }
+
+    /* Inside-right (shown when opened) */
+    .inside-right{ background:var(--paper); transform:rotateY(180deg); padding:18px; }
+
+    /* Back cover (full panel) appears when entire book flips */
+    .back-cover{
+      position:absolute;inset:0;width:100%;height:100%;
+      background:
+        linear-gradient(135deg, #111827 0%, #1f2937 60%);
+      color:white; border-radius:var(--radius);
+      transform-style:preserve-3d; transform:translateZ(-2px); /* sit behind pages */
+      display:flex; align-items:center; justify-content:center; padding:24px; text-align:center;
+      box-shadow:var(--shadow);
+      opacity:0; pointer-events:none; transition:opacity .6s ease;
+    }
+
+    /* Decorative bits */
+    .crest{width:84px;height:84px;border-radius:50%;
+      background:
+        radial-gradient(circle at 30% 30%, #fff6 0 20%, transparent 21%),
+        linear-gradient(135deg, #fbbf24 0%, #f59e0b 40%, #d97706 100%);
+      box-shadow:0 8px 20px rgba(0,0,0,.25), inset 0 2px 8px rgba(255,255,255,.35);
+      border:2px solid #fef3c7;
+    }
+
+    .title{font-family:'Playfair Display', serif; font-weight:700; font-size:28px; letter-spacing:.5px}
+    .subtitle{opacity:.9}
+
+    .ribbon{position:absolute; top:20px; right:-16px; background:linear-gradient(135deg,#f59e0b,#c2410c);
+      color:#fff; padding:8px 14px; border-radius:999px; font-weight:600; box-shadow:0 8px 20px rgba(0,0,0,.25);
+    }
+
+    /* Controls */
+    .controls{display:flex; gap:10px; justify-content:center; margin-top:14px}
+    .btn{appearance:none;border:none; background:#111827; color:#fff; padding:10px 14px; border-radius:12px; font-weight:600;
+      box-shadow:0 6px 16px rgba(17,24,39,.25); cursor:pointer; transition:transform .06s ease, opacity .3s;
+    }
+    .btn:active{transform:translateY(1px)}
+    .btn[disabled]{opacity:.45; cursor:not-allowed}
+
+    /* Card state classes */
+    .closed .right-leaf{ transform:rotateY(0deg); }
+    .open .right-leaf{ transform:rotateY(-180deg); }
+    .show-back .right-leaf{ transform:rotateY(-180deg); }
+
+    .closed .back-cover{ opacity:0; pointer-events:none }
+    .open .back-cover{ opacity:0; pointer-events:none }
+    .show-back .back-cover{ opacity:1; pointer-events:auto }
+
+    /* Paper textures */
+    .paper{
+      background:
+        linear-gradient(0deg, transparent 0 24px, rgba(0,0,0,.03) 25px),
+        repeating-linear-gradient(0deg, transparent 0 28px, rgba(0,0,0,.02) 29px 30px),
+        var(--paper);
+      background-size:100% 30px, 100% 30px, auto;
+    }
+
+    /* Inside content styling */
+    .section-title{font-family:'Playfair Display', serif; font-size:22px; margin:0 0 8px}
+    .small{font-size:13px; opacity:.75}
+    .list{margin:8px 0 0; padding:0 0 0 18px}
+
+    /* Responsive: fit smaller phones */
+    @media (max-width: 380px){
+      :root{ --card-w: 320px; --card-h: 520px }
+      .title{font-size:24px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="scene">
+      <!-- STATES are set on .book-holder: closed | open | show-back -->
+      <div id="bookHolder" class="book-holder closed">
+        <div class="book">
+          <!-- Left page (Inside Left: Invitation Message) -->
+          <section class="left-page paper" aria-label="Inside left page">
+            <span class="ribbon">You're Invited</span>
+            <h2 class="section-title">Foundation Day</h2>
+            <p class="small">A celebration of our journey, our teachers, and our students.</p>
+            <hr style="border:none;height:1px;background:linear-gradient(90deg,transparent, #e5e7eb 30%, #e5e7eb 70%, transparent); margin:12px 0">
+            <p style="line-height:1.6;margin:0">
+              With warm hearts, we invite you to join us for our School's Foundation Day.
+              Come share stories, smiles, and the spirit that makes our community special.
+            </p>
+            <p class="small" style="margin-top:10px">Flip the cover to RSVP on the right page.</p>
+          </section>
+
+          <!-- Right leaf: has two faces (front cover & inside-right) -->
+          <div class="right-leaf" id="rightLeaf" aria-live="polite">
+            <!-- Front Cover -->
+            <div class="leaf-face front" aria-label="Front cover">
+              <div class="crest"></div>
+              <div class="title">School Foundation Day 2025</div>
+              <div class="subtitle">Celebrating tradition • Honouring growth</div>
+              <div style="height:12px"></div>
+              <div style="font-weight:600;background:rgba(255,255,255,.15);padding:6px 10px;border-radius:999px">Tap to open</div>
+            </div>
+
+            <!-- Inside Right: RSVP + Attendees -->
+            <div class="leaf-face inside-right paper" aria-label="Inside right page (RSVP)">
+              <h3 class="section-title">RSVP</h3>
+              <p class="small">Confirm your presence &amp; add your name to the attendees list.</p>
+
+              <!-- Tally Embed (replace data-tally-src with your form URL) -->
+              <!-- INSTRUCTIONS: Replace YOUR_TALLY_FORM_ID below with your actual embed URL (e.g., https://tally.so/embed/m5XYZ7?hideTitle=1) -->
+              <div style="border:1px solid #e5e7eb;border-radius:12px;overflow:hidden; box-shadow: var(--shadow)">
+                <iframe data-tally-src="https://tally.so/embed/YOUR_TALLY_FORM_ID?hideTitle=1&transparentBackground=1"
+                        width="100%" height="280" frameborder="0" marginheight="0" marginwidth="0" title="RSVP Form"></iframe>
+              </div>
+
+              <div style="height:14px"></div>
+              <h4 class="section-title" style="font-size:18px">Attendees</h4>
+              <ul id="attendees" class="list"></ul>
+              <p id="attendeesEmpty" class="small">No confirmations yet. Be the first!</p>
+            </div>
+          </div>
+
+          <!-- Back Cover (Event Details) -->
+          <aside class="back-cover" aria-label="Back cover">
+            <div>
+              <div style="font-family:'Playfair Display',serif;font-size:22px;margin-bottom:8px">Event Details</div>
+              <div style="opacity:.9;line-height:1.7">
+                <div><strong>Date</strong>: 10 October 2025</div>
+                <div><strong>Time</strong>: 5:00 PM</div>
+                <div><strong>Venue</strong>: School Auditorium</div>
+              </div>
+              <div style="height:12px"></div>
+              <!-- INSTRUCTIONS: Replace link below with your actual Google Maps place link -->
+              <a href="https://maps.google.com/?q=School+Auditorium" target="_blank" rel="noopener" class="btn" style="background:#2563eb">Open in Google Maps</a>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <button id="btnClose" class="btn" disabled>Close</button>
+      <button id="btnOpen" class="btn">Open</button>
+      <button id="btnBack" class="btn">Back Cover</button>
+    </div>
+  </div>
+
+  <script>
+    // --- Card state machine --------------------------------------------------
+    // States: 'closed' (front), 'open' (inside spread), 'show-back' (back cover)
+    const holder = document.getElementById('bookHolder');
+    const rightLeaf = document.getElementById('rightLeaf');
+    const btnOpen = document.getElementById('btnOpen');
+    const btnClose = document.getElementById('btnClose');
+    const btnBack = document.getElementById('btnBack');
+
+    function setState(state){
+      holder.classList.remove('closed','open','show-back');
+      holder.classList.add(state);
+      // button states
+      btnOpen.disabled = (state !== 'closed');
+      btnClose.disabled = (state === 'closed');
+    }
+
+    // initial
+    setState('closed');
+
+    // Click handlers
+    btnOpen.addEventListener('click', ()=> setState('open'));
+    btnClose.addEventListener('click', ()=> setState('closed'));
+    btnBack.addEventListener('click', ()=> setState(holder.classList.contains('show-back') ? 'open' : 'show-back'));
+
+    // Tap the cover to open
+    rightLeaf.addEventListener('click', ()=>{
+      if(holder.classList.contains('closed')) setState('open');
+    });
+
+    // Touch gestures: swipe left/right to move through states
+    let touchStartX = null;
+    document.addEventListener('touchstart', (e)=>{ touchStartX = e.changedTouches[0].clientX; }, {passive:true});
+    document.addEventListener('touchend', (e)=>{
+      if(touchStartX === null) return;
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const threshold = 40; // minimal swipe
+      if(dx < -threshold){
+        // swipe left → advance
+        if(holder.classList.contains('closed')) setState('open');
+        else if(holder.classList.contains('open')) setState('show-back');
+      } else if(dx > threshold){
+        // swipe right → go back
+        if(holder.classList.contains('show-back')) setState('open');
+        else if(holder.classList.contains('open')) setState('closed');
+      }
+      touchStartX = null;
+    }, {passive:true});
+
+    // --- Tally auto-resize helper (optional) --------------------------------
+    // If using data-tally-src attribute, Tally can auto-resize via their script.
+    // We'll lazy-load it for better performance.
+    (function(){
+      const s = document.createElement('script');
+      s.src = 'https://tally.so/widgets/embed.js'; s.async = true; s.onload = function(){ Tally?.loadEmbeds?.(); };
+      document.body.appendChild(s);
+    })();
+
+    // --- Attendees list via SheetDB -----------------------------------------
+    // INSTRUCTIONS: Replace SHEETDB_URL with your actual endpoint, e.g.:
+    // const SHEETDB_URL = 'https://sheetdb.io/api/v1/abcd1234';
+    const SHEETDB_URL = 'https://sheetdb.io/api/v1/YOUR_API_ID';
+
+    const listEl = document.getElementById('attendees');
+    const emptyEl = document.getElementById('attendeesEmpty');
+
+    async function loadAttendees(){
+      if(!SHEETDB_URL.includes('YOUR_API_ID')) return; // prevent failing before user sets it
+      try{
+        const res = await fetch(SHEETDB_URL);
+        const data = await res.json();
+        const clean = (data||[]).filter(r =>
+          String(r.Attending||r.attending||'').toLowerCase().startsWith('y')
+        ).map(r => r.Name || r.name || r.fullname || '').filter(Boolean);
+
+        listEl.innerHTML = '';
+        if(clean.length){
+          emptyEl.style.display = 'none';
+          clean.forEach(n => {
+            const li = document.createElement('li');
+            li.textContent = n;
+            listEl.appendChild(li);
+          });
+        } else {
+          emptyEl.style.display = '';
+        }
+      }catch(err){
+        console.error('Attendees fetch failed', err);
+      }
+    }
+
+    // Load once when the inside page becomes visible
+    const observer = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting) loadAttendees();
+      })
+    }, {threshold: .6});
+
+    observer.observe(document.querySelector('.inside-right'));
+  </script>
+</body>
+</html>
