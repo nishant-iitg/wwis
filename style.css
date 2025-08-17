@@ -1,0 +1,56 @@
+/* School Foundation Day Invitation - common styles */
+:root {
+  --primary: #4c4c7c;
+  --accent: #ff6b6b;
+  --gold: #ffd56b;
+  --bg: #fdfdfd;
+  --text: #333;
+  --radius: 12px;
+  --shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Poppins',sans-serif;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:1.2rem;
+}
+header{
+  text-align:center;
+  margin-bottom:1.5rem;
+}
+button, .btn{
+  background:var(--primary);
+  color:#fff;
+  border:none;
+  padding:0.8rem 1.6rem;
+  font-size:1rem;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  cursor:pointer;
+  transition:background 0.3s;
+}
+button:hover{background:var(--accent);}
+.card, .panel{
+  background:#fff;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:1.5rem;
+  max-width:480px;
+  width:100%;
+}
+.attendees{
+  margin-top:1rem;
+}
+/* Responsive Typography */
+h1{font-size:clamp(1.8rem,5vw,2.4rem);color:var(--primary);}
+h2{font-size:clamp(1.4rem,4.5vw,2rem);color:var(--primary);}
+
+/* Table styling */
+table{width:100%;border-collapse:collapse;margin-top:0.8rem;}
+th,td{padding:0.6rem;border-bottom:1px solid #ddd;text-align:left;}
+th{background:var(--gold);color:#000;font-weight:600;}

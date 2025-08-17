@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Event Details</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    iframe{width:100%;border:none;border-radius:var(--radius);box-shadow:var(--shadow);min-height:320px;}
+    .info{margin-bottom:1rem;text-align:center;}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Event Details</h1>
+  </header>
+  <section class="panel">
+    <div class="info">
+      <h2>Date &amp; Time</h2>
+      <p>20th September 2025 &nbsp;•&nbsp; 12:00&nbsp;PM</p>
+    </div>
+    <div class="info">
+      <h2>Venue</h2>
+      <p>Wood Whistlers International School, Naddi</p>
+    </div>
+    <iframe
+      src="https://www.google.com/maps/embed/v1/place?key=YOUR_GOOGLE_MAPS_API_KEY&q=Wood+Whistlers+International+School+Naddi"
+      allowfullscreen
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <button style="margin-top:1rem;" onclick="window.location.href='index.html'">Back to Start</button>
+  </section>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RSVP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    iframe{width:100%;border:none;border-radius:var(--radius);box-shadow:var(--shadow);min-height:480px;}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Confirm Your Presence</h1>
+  </header>
+  <section class="panel">
+    <iframe src="https://forms.gle/XGtMi9tp3zwJ5NH19" title="RSVP Form" allowfullscreen></iframe>
+    <button style="margin-top:1rem;" onclick="document.getElementById('list').scrollIntoView({behavior:'smooth'});">View Attendee List</button>
+  </section>
+  <section id="list" class="panel attendees">
+    <h2>Friends Joining Us</h2>
+    <div id="attendeeTableWrapper"><p>Loading...</p></div>
+  </section>
+
+  <script>
+    // Fetch attendee names from Google Sheets CSV via cors proxy
+    const csvUrl = 'https://corsproxy.io/https://docs.google.com/spreadsheets/d/e/2PACX-1vTH-k5gYoL-lE_qnjw4hySKqvaTUHdZAsfq6yIrJc2gzh88PxGg38Tu3WjmVkJW57z7cN64WK090bib/pub?gid=472152070&single=true&output=csv';
+
+    fetch(csvUrl)
+      .then(res => res.text())
+      .then(text => {
+        const rows = text.trim().split(/\r?\n/).map(r=>r.split(','));
+        const headers = rows[0];
+        const attendCol = headers.findIndex(h=>/I will attend\./i.test(h));
+        const nameCol = headers.findIndex(h=>/Your Name\./i.test(h));
+        const attendees = rows.slice(1)
+          .filter(r=> r[attendCol] && r[attendCol].trim() !== '')
+          .map(r=> r[nameCol].replace(/"/g,''))
+          .filter(Boolean);
+
+        const wrapper = document.getElementById('attendeeTableWrapper');
+        if (!attendees.length) {
+          wrapper.innerHTML = '<p>No attendees yet. Be the first!</p>';
+          return;
+        }
+        let html = '<table><thead><tr><th>#</th><th>Name</th></tr></thead><tbody>';
+        attendees.forEach((name, idx) => { html += `<tr><td>${idx+1}</td><td>${name}</td></tr>`; });
+        html += '</tbody></table>';
+        wrapper.innerHTML = html;
+      })
+      .catch(err => {
+        document.getElementById('attendeeTableWrapper').innerHTML = '<p>Failed to load attendee list.</p>';
+        console.error(err);
+      });
+  </script>
+</body>
+</html>
+
