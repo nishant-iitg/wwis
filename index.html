@@ -6,7 +6,7 @@
   <title>Foundation Day Card</title>
   <link rel="stylesheet" href="https://unpkg.com/st-pageflip/dist/css/page-flip.min.css"/>
   <style>
-    body, html {
+    html, body {
       margin: 0;
       padding: 0;
       height: 100%;
@@ -17,7 +17,8 @@
       width: 100vw;
       height: 100vh;
     }
-    .page-content {
+    .page {
+      background: #fffaf0;
       width: 100%;
       height: 100%;
       display: flex;
@@ -25,20 +26,26 @@
       justify-content: center;
       font-family: 'Georgia', serif;
       font-size: 1.5rem;
-      background: #fffaf0;
       padding: 20px;
       box-sizing: border-box;
     }
   </style>
 </head>
 <body>
-  <div id="book"></div>
+  <div id="book">
+    <div class="page">🎉 Welcome to Our Foundation Day 🎉</div>
+    <div class="page">💌 You're warmly invited to celebrate with us!</div>
+    <div class="page">✅ RSVP here (Tally embed placeholder)</div>
+    <div class="page">📍 Venue: School Hall<br>🕒 Date: 25th Aug, 5PM</div>
+  </div>
 
   <script src="https://unpkg.com/st-pageflip/dist/js/page-flip.browser.min.js"></script>
   <script>
-    const pageFlip = new St.PageFlip(document.getElementById("book"), {
-      width: window.innerWidth,   // viewport width
-      height: window.innerHeight, // viewport height
+    const bookEl = document.getElementById("book");
+
+    const pageFlip = new St.PageFlip(bookEl, {
+      width: window.innerWidth,
+      height: window.innerHeight,
       size: "stretch",
       minWidth: 315,
       maxWidth: 2000,
@@ -47,16 +54,11 @@
       maxShadowOpacity: 0.5,
       showCover: false,
       useMouseEvents: true,
-      flippingTime: 800,
+      flippingTime: 800
     });
 
-    // Add pages with curved effect
-    pageFlip.loadFromHTML([
-      `<div class="page-content">🎉 Welcome to Our Foundation Day 🎉</div>`,
-      `<div class="page-content">💌 You're warmly invited to celebrate with us!</div>`,
-      `<div class="page-content">✅ RSVP here (Tally embed placeholder)</div>`,
-      `<div class="page-content">📍 Venue: School Hall<br>🕒 Date: 25th Aug, 5PM</div>`
-    ]);
+    // load pages from our markup
+    pageFlip.loadFromHTML(document.querySelectorAll(".page"));
   </script>
 </body>
 </html>
