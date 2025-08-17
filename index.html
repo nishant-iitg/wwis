@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>School Foundation Day Invitation</title>
+  <title>School Foundation Day</title>
   <style>
     body {
       margin: 0;
       padding: 0;
-      background: #f5f5f5;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Poppins', sans-serif;
+      background: #f0f0f0;
       overflow: hidden;
     }
 
@@ -28,7 +28,7 @@
       position: relative;
     }
 
-    .card-side {
+    .page {
       width: 100%;
       height: 100%;
       backface-visibility: hidden;
@@ -39,176 +39,115 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 30px;
+      padding: 20px;
       box-sizing: border-box;
       text-align: center;
     }
 
-    .card-front {
-      background: linear-gradient(135deg, #fff7e6, #ffe4b5);
+    .page h1, .page h2, .page p {
+      margin: 10px 0;
     }
 
-    .card-inside-left {
-      background: #ffffff;
+    /* Styling each side */
+    .page1 {
+      background: linear-gradient(135deg, #fdf497, #fceabb, #f8d800);
+    }
+    .page2 {
+      background: linear-gradient(135deg, #c3ecb2, #7ee8fa);
       transform: rotateY(180deg);
     }
-
-    .card-inside-right {
-      background: #fafafa;
-      transform: rotateY(90deg);
+    .page3 {
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      transform: rotateY(180deg);
     }
-
-    .card-back {
-      background: linear-gradient(135deg, #dbeafe, #bfdbfe);
-      transform: rotateY(-90deg);
-    }
-
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 20px;
-      color: #b8860b;
-    }
-
-    p {
-      font-size: 1.2rem;
-      line-height: 1.6;
-      margin-bottom: 20px;
+    .page4 {
+      background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+      transform: rotateY(180deg);
     }
 
     input[type="text"] {
       padding: 10px;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      margin-bottom: 10px;
-      width: 80%;
-      max-width: 300px;
-    }
-
-    button {
-      padding: 12px 20px;
-      background: #2563eb;
-      color: white;
-      font-size: 1rem;
+      margin-top: 10px;
       border: none;
       border-radius: 6px;
-      cursor: pointer;
-      margin: 10px;
-    }
-
-    button:hover {
-      background: #1e40af;
-    }
-
-    .nav {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 10px;
-    }
-
-    .attendees {
-      max-height: 200px;
-      overflow-y: auto;
-      border: 1px solid #ddd;
-      padding: 10px;
-      border-radius: 6px;
+      font-size: 1rem;
       width: 80%;
-      background: #f9f9f9;
+    }
+    input[type="checkbox"] {
+      margin-top: 15px;
+      transform: scale(1.3);
     }
   </style>
 </head>
 <body>
   <div class="card">
     <div class="card-inner" id="cardInner">
-
       <!-- Page 1 -->
-      <div class="card-side card-front">
-        <h1>School Foundation Day</h1>
-        <p>Join us in celebrating the glorious journey of our school!</p>
+      <div class="page page1">
+        <h1>🏫 Our School Foundation Day 🎉</h1>
+        <p>Celebrating years of excellence, learning & friendship</p>
       </div>
 
       <!-- Page 2 -->
-      <div class="card-side card-inside-left">
-        <h1>You're Invited</h1>
-        <p>We warmly welcome you to our Foundation Day celebration.  
-           Let’s cherish the memories and create new ones together.</p>
+      <div class="page page2">
+        <h2>🌸 You Are Invited 🌸</h2>
+        <p>Join us for a beautiful evening of celebration, joy, and memories.</p>
       </div>
 
       <!-- Page 3 -->
-      <div class="card-side card-inside-right">
-        <h1>RSVP</h1>
-        <form id="rsvpForm">
-          <input type="text" id="nameInput" placeholder="Enter your name" required>
-          <br>
-          <label>
-            <input type="checkbox" id="willCome" required>
-            I will definitely come
-          </label>
-          <br>
-          <button type="submit">Submit</button>
-        </form>
-        <h2>Attendees</h2>
-        <div class="attendees" id="attendeesList">
-          <p>No attendees yet.</p>
-        </div>
+      <div class="page page3">
+        <h2>📋 RSVP</h2>
+        <label>
+          <input type="checkbox" id="attendCheck"> I will attend
+        </label>
+        <input type="text" id="nameInput" placeholder="Enter your name" />
+        <p id="attendeesList">Attendees: None yet</p>
       </div>
 
       <!-- Page 4 -->
-      <div class="card-side card-back">
-        <h1>Event Details</h1>
-        <p>Date: 25th August 2025</p>
-        <p>Time: 5:00 PM</p>
-        <p>Venue: School Auditorium</p>
+      <div class="page page4">
+        <h2>📍 Venue & Time</h2>
+        <p>School Auditorium</p>
+        <p>26th August, 5:00 PM onwards</p>
       </div>
     </div>
   </div>
 
-  <!-- Navigation -->
-  <div class="nav">
-    <button onclick="flipTo(0)">Page 1</button>
-    <button onclick="flipTo(1)">Page 2</button>
-    <button onclick="flipTo(2)">Page 3</button>
-    <button onclick="flipTo(3)">Page 4</button>
-  </div>
-
   <script>
-    const cardInner = document.getElementById('cardInner');
-    const attendeesList = document.getElementById('attendeesList');
-    const rsvpForm = document.getElementById('rsvpForm');
-    const names = [];
+    let currentPage = 0;
+    const cardInner = document.getElementById("cardInner");
+    const totalPages = 4;
 
-    function flipTo(page) {
-      switch(page) {
-        case 0: cardInner.style.transform = 'rotateY(0deg)'; break;
-        case 1: cardInner.style.transform = 'rotateY(180deg)'; break;
-        case 2: cardInner.style.transform = 'rotateY(-90deg)'; break;
-        case 3: cardInner.style.transform = 'rotateY(90deg)'; break;
-      }
-    }
+    let startX = 0;
 
-    rsvpForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const name = document.getElementById('nameInput').value.trim();
-      const willCome = document.getElementById('willCome').checked;
-
-      if(name && willCome) {
-        names.push(name);
-        updateAttendees();
-        rsvpForm.reset();
-      }
+    document.addEventListener("touchstart", (e) => {
+      startX = e.touches[0].clientX;
     });
 
-    function updateAttendees() {
-      attendeesList.innerHTML = '';
-      names.forEach(n => {
-        const p = document.createElement('p');
-        p.textContent = n;
-        attendeesList.appendChild(p);
-      });
-    }
+    document.addEventListener("touchend", (e) => {
+      let endX = e.changedTouches[0].clientX;
+      if (endX < startX - 50) {
+        // swipe left
+        if (currentPage < totalPages - 1) currentPage++;
+      } else if (endX > startX + 50) {
+        // swipe right
+        if (currentPage > 0) currentPage--;
+      }
+      cardInner.style.transform = `rotateY(${-currentPage * 180}deg)`;
+    });
+
+    // Fake attendee list handling (replace later with Tally/SheetDB)
+    const attendCheck = document.getElementById("attendCheck");
+    const nameInput = document.getElementById("nameInput");
+    const attendeesList = document.getElementById("attendeesList");
+    let attendees = [];
+
+    attendCheck.addEventListener("change", () => {
+      if (attendCheck.checked && nameInput.value.trim()) {
+        attendees.push(nameInput.value.trim());
+        attendeesList.textContent = "Attendees: " + attendees.join(", ");
+      }
+    });
   </script>
 </body>
 </html>
